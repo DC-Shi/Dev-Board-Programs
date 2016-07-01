@@ -1,9 +1,13 @@
 #pragma once
+
+/// Code definition from http://wenku.baidu.com/view/2197b3400b4e767f5bcfce34.html
+/// Might be wrong.
+
 class GREE_Control_Code
 {
 	typedef unsigned char BYTE;
 
-	enum Mode : BYTE
+	enum enum_Mode : BYTE
 	{
 		Auto = 0b000,
 		Cool = 0b100,
@@ -12,157 +16,75 @@ class GREE_Control_Code
 		Heat = 0b001
 	};
 
-	enum FanSpeed : BYTE
+	enum enum_FanSpeed : BYTE
 	{
-		Auto = 0b00,
+		LvAuto = 0b00,
 		Lv1 = 0b10,
 		Lv2 = 0b01,
 		Lv3 = 0b11
 	};
 
+private:
 	// 模式标志
-	void SetMode(Mode m)
-	{
-		/// Clear the mode flag.
-		First35[0] &= 0b00011111;
-		/// Fill the data.
-		First35[0] |= m << 5;
-	}
-
+	enum_Mode mode;
 	// 开关
-	void SetOnOff(bool isOn)
-	{
-		/// Clear the mode flag.
-		First35[0] &= 0b11101111;
-		/// Fill the data.
-		First35[0] |= (isOn ? 1 : 0) << 4;
-	}
+	bool powerOn;
 
 	// 风速
-	void SetFanSpeed(FanSpeed fs)
-	{
-		/// Clear the mode flag.
-		First35[0] &= 0b11110011;
-		/// Fill the data.
-		First35[0] |= fs << 2;
-	}
+	enum_FanSpeed fanSpeed;
 
 	// 扫风
-	void SetSwipe(bool swipe)
-	{
-		/// Clear the mode flag.
-		First35[0] &= 0b11111101;
-		/// Fill the data.
-		First35[0] |= (swipe ? 1 : 0) << 1;
-	}
+	bool swipe;
 
 	// 睡眠
-	void SetSleep(bool sleep)
-	{
-		/// Clear the mode flag.
-		First35[0] &= 0b11111110;
-		/// Fill the data.
-		First35[0] |= (sleep ? 1 : 0) << 1;
-	}
+	bool sleep;
 
 	// 温度数据
-	void SetTemp(int temperature)
-	{
-		int revTemp = temperature - 16;
-		/// Clear the mode flag.
-		First35[1] &= 0b00001111;
-		/// Fill the data.
-		First35[1] |= revTemp << 4;
-	}
+	int temperature;
 
 	// 定时数据
-	void SetTimer(int time)
-	{
 		/// We do not implement this.
-	}
+
 
 	// 超强
-	void SetStrong(bool strong)
-	{
-		/// Clear the mode flag.
-		First35[1] &= 0b11110111;
-		/// Fill the data.
-		First35[1] |= (strong ? 1 : 0) << 3;
-	}
+	bool strong;
 
 	// 灯光
-	void SetLight(bool light)
-	{
-		/// Clear the mode flag.
-		First35[1] &= 0b11111011;
-		/// Fill the data.
-		First35[1] |= (light ? 1 : 0) << 2;
-	}
+	bool light;
 
 	// 健康
-	void SetHealthy(bool healthy)
-	{
-		/// Clear the mode flag.
-		First35[1] &= 0b11111101;
-		/// Fill the data.
-		First35[1] |= (healthy ? 1 : 0) << 1;
-	}
+	bool healthy;
 
 	// 干燥
-	void SetDry(bool dry)
-	{
-		/// Clear the mode flag.
-		First35[1] &= 0b11111110;
-		/// Fill the data.
-		First35[1] |= (dry ? 1 : 0);
-	}
+	bool dry;
 
 	// 换气
-	void SetAirExchange(bool airExchange)
-	{
-		/// Clear the mode flag.
-		First35[2] &= 0b01111111;
-		/// Fill the data.
-		First35[2] |= (airExchange ? 1 : 0) << 7;
-	}
+	bool airExchange;
 
 	// 上下扫风
-	void SetSwipe(bool swipe)
-	{
-		/// Clear the mode flag.
-		First35[0] &= 0b11111101;
-		/// Fill the data.
-		First35[0] |= (swipe ? 1 : 0) << 1;
-	}
+	bool swipeUpDown;
 
 	// 左右扫风
-	void SetSwipe(bool swipe)
-	{
-		/// Clear the mode flag.
-		First35[0] &= 0b11111101;
-		/// Fill the data.
-		First35[0] |= (swipe ? 1 : 0) << 1;
-	}
+	bool swipeLeftRight;
 
 	// 温度显示
-	void SetSwipe(bool swipe)
-	{
-		/// Clear the mode flag.
-		First35[0] &= 0b11111101;
-		/// Fill the data.
-		First35[0] |= (swipe ? 1 : 0) << 1;
-	}
+	bool tempDisplay;
 
 	// 节能
-	void SetSwipe(bool swipe)
-	{
-		/// Clear the mode flag.
-		First35[0] &= 0b11111101;
-		/// Fill the data.
-		First35[0] |= (swipe ? 1 : 0) << 1;
-	}
+	bool energySaving;
+
 public:
 	GREE_Control_Code();
 	~GREE_Control_Code();
+	void SendAllData();
+	void SendMultipleBits(int bit, int lenght);
+	void SendOneBit(bool bit);
+	void Send1();
+	void Send0Zero();
+	void SendStartcodeS();
+	void SendMiddlecodeC();
+	void SendLvHigh();
+	void SendLvLow();
+	void WaitMicroSecond(int muSec);
 };
 
